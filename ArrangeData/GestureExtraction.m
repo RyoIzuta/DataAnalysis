@@ -23,6 +23,7 @@
 ## Created: 2015-06-16
 
 function [Variance3] = GestureExtraction (Target, Th_S, Th_G)
+  %GestureData,Threshold for Startpoint, Threshold for Endpoint
 
   %TimeStamp, PressData, PressData_TD, AccData
     PlotData = Arrange_Data(Target);
@@ -59,6 +60,6 @@ function [Variance3] = GestureExtraction (Target, Th_S, Th_G)
       end
     end
   
-   Variance3 = Variance2(CutPoint_S:CutPoint_G,1);
+   Variance3 = PlotData(CutPoint_S:CutPoint_G,:);
 
 end

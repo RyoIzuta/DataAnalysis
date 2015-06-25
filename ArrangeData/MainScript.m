@@ -15,12 +15,15 @@
   for n=1:size(GestureData,2)
     Target = GestureData{1,n};
     
-    Variance3 = GestureExtraction(Target, 0.04, 0.01);
+    %ジェスチャの切り出し
+    gesture(1,n) = [{GestureExtraction(Target, 0.04, 0.01)}];
+    
     
     
   end
+  targetGesture = gesture{1,3};
   figure;
   %ylim([min(PlotData(10:end,3)), max(PlotData(10:end,3))]);
-  plot(Variance3);
+  %plot(gesture);
   %plot(PlotData(10:end,1),PlotData(10:end,3),PlotData(10:end,1),PlotData(10:end,4));
    %plot(PlotData(:,1),PlotData(:,2),PlotData(:,1),PlotData(:,3));

@@ -1,0 +1,15 @@
+ clear;
+ close all;
+ 
+  %Read Users' Data
+  CSV = csvread('TestData.csv');
+  
+  Label = CSV(1,1);
+  Data = CSV(2:end,:);
+  GestureData = Cut_Gesture(Data);
+  
+  k
+  Feature = FeatureExtraction(GestureData, Label);
+  %Output CSV file.
+  dlmwrite('featureSet.csv',Feature,'-append');
+  

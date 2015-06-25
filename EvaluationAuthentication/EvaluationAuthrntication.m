@@ -1,0 +1,63 @@
+clear;
+close all;
+
+Feature = csvread('featureSet20150508.csv');
+Contribution = csvread('ContributionRanking.csv');
+index = int16(Contribution(end,end));
+Data = Feature(:,index);
+for m=9:-1:1
+    StrNum = num2str(m);
+    for k=1:m
+        index = int16(Contribution(end-k,end));
+        Data = horzcat(Data,Feature(:,index));
+    end
+    Label = Feature(:, end-1:end);
+    N_Data = zscore(Data, 1, 2);
+    %N_Data = Data;
+    id = 0;
+    Log = zeros(1,5);
+    FARFRR = zeros(1,3);
+    for Threshold =0:0.01:10
+        ResultMatrix = zeros(2,2);
+        for k=1:size(N_Data,1)
+            TrainData = N_Data(k,:);
+            TrainLabel = Label(k,:);
+            for n=1:size(N_Data,1)
+                if(k ~= n)
+                    id = id+1;
+                    TestData = N_Data(n,:);
+                    TestLabel = Label(n,:);
+                    Euclid = sqrt(sum((TrainData-TestData).^2));
+                    if(Euclid < Threshold)%Ok
+                        if(TrainLabel(1,2) == TestLabel(1,2))%yourself
+                            ResultMatrix(1,1) = ResultMatrix(1,1) +1;
+                        else%otherself
+                            ResultMatrix(2,1) = ResultMatrix(2,1) +1;
+                        end
+                    else%NG
+                        if(TrainLabel(1,2) == TestLabel(1,2))%yourself
+                            ResultMatrix(1,2) = ResultMatrix(1,2) +1;
+                        else%otherself
+                            ResultMatrix(2,2) = ResultMatrix(2,2) +1;
+                        end
+                    end
+                    %tmp = [id TestLabel(1,2) TrainLabel(1,2) TestLabel(1,1) TrainLabel(1,1)];
+                    %tmp = [id Euclid];
+                    %dlmwrite('Log.csv',tmp,'-append');
+                    %Log = vertcat(Log, tmp);
+                    
+                   
+                end
+            end
+        end
+        tmp2 = [Threshold ResultMatrix(1,1) ResultMatrix(1,2) ResultMatrix(2,1) ResultMatrix(2,2)]
+        FileName =['FAR_FRR', 'FeatureNum_', StrNum,'.csv'];
+        dlmwrite(FileName, tmp2,'-append');
+        %FARFRR = vertcat(FARFRR, tmp2);
+    end
+end
+
+%csvwrite('Log.csv',Log);
+%csvwrite('FAR_FRRcsv', FARFRR);
+
+a=1;
