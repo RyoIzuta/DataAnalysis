@@ -1,0 +1,21 @@
+ clear;
+ close all;
+ 
+ listing = dir('../Data/DataSet_evaluation/*.csv');
+ Path = '../Data/DataSet_evaluation/';
+ FilePath = strcat(Path, listing(1,1).name);
+ %Read Users' Data
+ CSV = csvread(FilePath);
+  
+  Label = CSV(1,1);
+  Data = CSV(2:end,:);
+  GestureData = Cut_Gesture(Data);
+  
+  Target = GestureData{1,1};
+  
+  PlotData = Arrange_Data(Target);
+  
+  PlotData = horzcat(PlotData)
+  
+  plot(PlotData);
+   %plot(PlotData(:,1),PlotData(:,2),PlotData(:,1),PlotData(:,3));
